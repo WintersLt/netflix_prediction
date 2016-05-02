@@ -1,0 +1,11 @@
+model1 <- glm(is_rated ~ m_avg_rating + m_num_ratings + u_avg_rating + u_past_6months + u_total_ratings , data = gen_sample, family = binomial(link = "logit"))
+predTst <- predict(model1, answers_yr, type="response")
+predRes <- cut(predTst, breaks=c(-Inf, 0.5, Inf), labels=c(0, 1))
+library(caret)
+actualOut <- answers_yr[, 3]
+actualOut <- as.numeric(actualOut != 0)
+actualOut <- cut(actualOut, breaks=c(-Inf, 0.5, Inf), labels=c(0, 1))
+confusionMatrix(predRes, actualOut)
+summary(model1)
+library(hydroGOF)
+rmse(predTst, answers_yr[, 3])
